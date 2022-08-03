@@ -1,240 +1,122 @@
-# What to look for in a code review
-
-
+# O que procurar em uma revisão de código
 
 Note: Always make sure to take into account
 [The Standard of Code Review](standard.md) when considering each of these
 points.
 
+Nota: Certifique-se de sempre levar em conta [O Padrão de Revisão de Código](standard.md) ao considerar cada um desses pontos.
+
 ## Design
 
-The most important thing to cover in a review is the overall design of the CL.
-Do the interactions of various pieces of code in the CL make sense? Does this
-change belong in your codebase, or in a library? Does it integrate well with the
-rest of your system? Is now a good time to add this functionality?
+A coisa mais importante a ser abordada em uma revisão é o design geral da CL. As interações de vários pedaços de código na CL fazem sentido? Essa mudança pertence à sua base de código ou a uma biblioteca? Ela se integra bem com o resto do seu sistema? Agora é um bom momento para adicionar essa funcionalidade?
 
-## Functionality
+## Funcionalidade
 
-Does this CL do what the developer intended? Is what the developer intended good
-for the users of this code? The "users" are usually both end-users (when they
-are affected by the change) and developers (who will have to "use" this code in
-the future).
+Esta CL faz o que o desenvolvedor pretendia? É o que o desenvolvendor planejava para os usuários deste código? Os "usuários" geralmente são os usuários finais (quando são afetados pela mudança) e os desenvolvedores (que terão que "usar" este código no futuro).
 
-Mostly, we expect developers to test CLs well-enough that they work correctly by
-the time they get to code review. However, as the reviewer you should still be
-thinking about edge cases, looking for concurrency problems, trying to think
-like a user, and making sure that there are no bugs that you see just by reading
-the code.
+Sobretudo, esperamos que os desenvolvedores testem as CLs o suficiente para que funcionem corretamente antes que ela chegue na revisão de código. No entando, como revisor, você ainda deve estar pensando em casos extremos, procurando problemas de simultaneidade, tentando pensar como um usuário e certificando-se de que não há bugs que você veria apenas lendo o código.
 
-You *can* validate the CL if you want—the time when it's most important for a
-reviewer to check a CL's behavior is when it has a user-facing impact, such as a
-**UI change**. It's hard to understand how some changes will impact a user when
-you're just reading the code. For changes like that, you can have the developer
-give you a demo of the functionality if it's too inconvenient to patch in the CL
-and try it yourself.
+Você _pode_ validar a CL, se quiser, no momento em que é mais importante para um revisor analisar o comportamento de uma CL, que é quando ele tem um impacto voltado para o usuário, como em uma **Alteração da interface**. É difícil entender como algumas mudanças afetarão o usuário quando você está apenas lendo o código. Para mudanças como essa, você pode pedir para o desenvolvedor lhe dar uma demonstração da funcionalidade, caso seja muito inconveniente juntar na CL e tentar você mesmo.
 
-Another time when it's particularly important to think about functionality
-during a code review is if there is some sort of **parallel programming** going
-on in the CL that could theoretically cause deadlocks or race conditions. These
-sorts of issues are very hard to detect by just running the code and usually
-need somebody (both the developer and the reviewer) to think through them
-carefully to be sure that problems aren't being introduced. (Note that this is
-also a good reason not to use concurrency models where race conditions or
-deadlocks are possible—it can make it very complex to do code reviews or
-understand the code.)
+Outro momento em que é particularmente importante pensar na funcionalidade durante uma revisão de código, é quando há algum tipo de **programação paralela** acontecendo na CL que teoricamente poderia causar deadlocks ou condições de corrida. Esses tipos de problemas são muito difíceis de detectar apenas executando o código e geralmente precisam de alguém (tanto o desenvolvedor quanto o revisor) para pensar sobre eles cuidadosamente para ter certeza de que esses problemas não continuarão. (Observe que isso é também uma boa razão para não usar modelos de concorrência onde as condições de corrida ou deadlocks são possíveis de acontecer, pode tornar muito complexo fazer revisões de código ou entender o código.)
 
-## Complexity
+## Complexidade
 
-Is the CL more complex than it should be? Check this at every level of the
-CL—are individual lines too complex? Are functions too complex? Are classes too
-complex? "Too complex" usually means **"can't be understood quickly by code
-readers."** It can also mean **"developers are likely to introduce bugs when
-they try to call or modify this code."**
+A CL é mais complexa do que deveria ser? Verifique isso em todos os níveis da CL, as linhas individuais são muito complexas? As funções são muito complexas? As classes são muito complexas? "Muito complexo" geralmente significa **"não pode ser entendido rapidamente por leitores de código."** Também pode significar **"os desenvolvedores provavelmente introduzirão bugs quando tentarem modificar este código."**
 
-A particular type of complexity is **over-engineering**, where developers have
-made the code more generic than it needs to be, or added functionality that
-isn't presently needed by the system. Reviewers should be especially vigilant
-about over-engineering. Encourage developers to solve the problem they know
-needs to be solved *now*, not the problem that the developer speculates *might*
-need to be solved in the future. The future problem should be solved once it
-arrives and you can see its actual shape and requirements in the physical
-universe.
+Um tipo específico de complexidade é a **engenharia excessiva**, em que os desenvolvedores tornaram o código mais genérico do que precisaria ser, ou adicionaram funcionalidades que atualmente não são necessárias pelo sistema. Os revisores devem estar especialmente atentos com a engenharia excessiva. Incentive os desenvolvedores a resolver o problema que eles conhecem e que precisa ser resolvido _agora_, não o problema que o desenvolvedor especula que _poderia_ ser resolvido no futuro. O problema do futuro deve ser resolvido uma vez que ele chega e você pode ver sua forma e requisitos reais no universo.
 
-## Tests
+## Testes
 
-Ask for unit, integration, or end-to-end
-tests as appropriate for the change. In general, tests should be added in the
-same CL as the production code unless the CL is handling an
-[emergency](../emergencies.md).
+Solicite testes de unidade, testes de integração e testes ponta a ponta conforme apropriado para a mudança. Em geral, os testes devem ser adicionados na mesma CL que o código de produção, a menos que a CL esteja lidando com uma [emergência](../emergencies.md).
 
-Make sure that the tests in the CL are correct, sensible, and useful. Tests do
-not test themselves, and we rarely write tests for our tests—a human must ensure
-that tests are valid.
+Certifique-se de que os testes na CL estejam corretos, sensatos e úteis. Testes fazem testes, eles não se testam, e raramente escrevemos testes para nossos testes, um humano deve garantir que os testes são válidos.
 
-Will the tests actually fail when the code is broken? If the code changes
-beneath them, will they start producing false positives? Does each test make
-simple and useful assertions? Are the tests separated appropriately between
-different test methods?
+Os testes realmente falham quando o código está quebrado? Se o código mudar abaixo deles, eles começarão a produzir falsos positivos? Cada teste faz afirmações simples e úteis? Os testes estão separados adequadamente entre métodos de teste diferentes?
 
-Remember that tests are also code that has to be maintained. Don't accept
-complexity in tests just because they aren't part of the main binary.
+Lembre-se de que os testes também são códigos que precisam ser mantidos. Não aceite complexidade em testes apenas porque eles não fazem parte do binário principal.
 
-## Naming
+## Nomenclatura
 
-Did the developer pick good names for everything? A good name is long enough to
-fully communicate what the item is or does, without being so long that it
-becomes hard to read.
+O desenvolvedor escolheu bons nomes para tudo? Um bom nome é longo o suficiente para comunicar totalmente o que o item é ou faz, sem ser tão longo que torna-se difícil de ler.
 
-## Comments
+## Comentários
 
-Did the developer write clear comments in understandable English? Are all of the
-comments actually necessary? Usually comments are useful when they **explain
-why** some code exists, and should not be explaining *what* some code is doing.
-If the code isn't clear enough to explain itself, then the code should be made
-simpler. There are some exceptions (regular expressions and complex algorithms
-often benefit greatly from comments that explain what they're doing, for
-example) but mostly comments are for information that the code itself can't
-possibly contain, like the reasoning behind a decision.
+O desenvolvedor escreveu comentários claros e entendíveis? São todos os comentários realmente necessários? Normalmente os comentários são úteis quando **explicam por que** algum código existe e não devem estar explicando _o que_ algum código está fazendo. Se o código não for claro o suficiente para se explicar, então o código deve ser feito mais simples. Existem algumas exceções (expressões regulares e algorítimos complexos, por exemplo, muitas vezes se beneficiam muito de comentários que explicam o que estão fazendo), mas principalmente os comentários são para informações que o próprio código não pode possivelmente conter, como o raciocínio por trás de uma decisão.
 
-It can also be helpful to look at comments that were there before this CL. Maybe
-there is a TODO that can be removed now, a comment advising against this change
-being made, etc.
+Também pode ser útil olhar os comentários que existiam antes desta CL. Pode ser que haja um TO-DO que pode ser removido agora, um comentário desaconselhando essa alteração, etc.
 
-Note that comments are different from *documentation* of classes, modules, or
-functions, which should instead express the purpose of a piece of code, how it
-should be used, and how it behaves when used.
+Observe que os comentários são diferentes da _documentação_ de classes, módulos ou funções, que devem, em vez disso, expressar o propósito de um pedaço de código, como ele deve ser usado e como ele se comporta quando usado.
 
-## Style
+## Estilo
 
-We have [style guides](http://google.github.io/styleguide/) at Google for all
-of our major languages, and even for most of the minor languages. Make sure the
-CL follows the appropriate style guides.
+Temos [guias de estilo](http://google.github.io/styleguide/) no Google para todas as nossas principais linguagens e para a maioria das linguagens secundárias. Certifique-se que a CL segue os guias de estilo apropriados.
 
-If you want to improve some style point that isn't in the style guide, prefix
-your comment with "Nit:" to let the developer know that it's a nitpick that you
-think would improve the code but isn't mandatory. Don't block CLs from being
-submitted based only on personal style preferences.
+Se você quiser melhorar algum ponto de estilo que não está no guia de estilo, prefixe seu comentário com "Nit:" para que o desenvolvedor saiba que é um detalhe que você achou que melhoraria o código, mas não é obrigatório. Não impeça as CLs de serem integradas ao código com base apenas em preferências pessoais de estilo.
 
-The author of the CL should not include major style changes combined with other
-changes. It makes it hard to see what is being changed in the CL, makes merges
-and rollbacks more complex, and causes other problems. For example, if the
-author wants to reformat the whole file, have them send you just the
-reformatting as one CL, and then send another CL with their functional changes
-after that.
+O autor da CL não deve incluir grandes mudanças de estilo combinadas com outras mudanças. Dificulta ver o que está sendo alterado na CL, torna as merges e as reversões mais complexas, além de causar outros problemas. Por exemplo, se o autor deseja formatar o arquivo inteiro, peça que ele envie apenas a formatação como uma CL e, em seguida, enviar outra CL com suas alterações funcionais.
 
-## Consistency
+## Consistência
 
-What if the existing code is inconsistent with the style guide? Per our
-[code review principles](standard.md#principles), the style guide is the
-absolute authority: if something is required by the style guide, the CL should
-follow the guidelines.
+E se o código existente for inconsistente com o guia de estilo? Por nossos [princípios de revisão de código](standard.md#principles), o guia de estilo é a autoridade absoluta: se algo é exigido pelo guia de estilo, a CL deve seguir as orientações.
 
-In some cases, the style guide makes recommendations rather than declaring
-requirements. In these cases, it's a judgment call whether the new code should
-be consistent with the recommendations or the surrounding code. Bias towards
-following the style guide unless the local inconsistency would be too confusing.
+Em alguns casos, o guia de estilo faz recomendações em vez de declarar requisitos. Nesses casos, é de próprio julgamento se o novo código deve ser consistente com as recomendações ou pelo menos próximo à elas. A tendência é seguir o guia de estilo, a menos que a inconsistência local seja muito confusa.
 
-If no other rule applies, the author should maintain consistency with the
-existing code.
+Se nenhuma outra regra se aplicar, o autor deve manter a consistência com o código existente.
 
-Either way, encourage the author to file a bug and add a TODO for cleaning up
-existing code.
+De qualquer forma, incentive o autor a registrar um bug e adicionar um TO-DO para limpeza do código existente.
 
-## Documentation
+## Documentação
 
-If a CL changes how users build, test, interact with, or release code, check to
-see that it also updates associated documentation, including
-READMEs, g3doc pages, and any generated
-reference docs. If the CL deletes or deprecates code, consider whether the
-documentation should also be deleted.
-If documentation is
-missing, ask for it.
+Se uma CL alterar a forma como os usuários criam, testam, interagem ou lançam o código, verifique se ele também atualiza a documentação associada, incluindo READMEs, páginas g3doc e qualquer documentos gerados de referência. Se a CL excluir ou descontinuar o código, considere que a documentação também deva ser excluída.
 
-## Every Line {#every-line}
+## Cada Linha {#every-line}
 
-In the general case, look at *every* line of code that you have been assigned to
-review. Some things like data files, generated code, or large data structures
-you can scan over sometimes, but don't scan over a human-written class,
-function, or block of code and assume that what's inside of it is okay.
-Obviously some code deserves more careful scrutiny than other code&mdash;that's
-a judgment call that you have to make&mdash;but you should at least be sure that
-you *understand* what all the code is doing.
+No caso geral, veja _toda_ linha de código que lhe foi atribuída para revisão. Algumas coisas como arquivos de dados, código gerado ou grandes estruturas de dados você pode apenas escanear por cima, mas não revise por cima uma classe, funções ou blocos de códigos escrito por humanos assumindo que isso está bom. Obviamente, alguns códigos merecem uma análise mais cuidadosa do que outros códigos &mdash; Isso é um julgamento que você tem que fazer &mdash; Porém você deve pelo menos ter certeza de que você _entende_ o que todo o código está fazendo.
 
-If it's too hard for you to read the code and this is slowing down the review,
-then you should let the developer know that
-and wait for them to clarify it before you try to review it. At Google, we hire
-great software engineers, and you are one of them. If you can't understand the
-code, it's very likely that other developers won't either. So you're also
-helping future developers understand this code, when you ask the developer to
-clarify it.
+Se for muito difícil para você ler o código e isso atrasar a revisão, então você deve informar ao desenvolvedor sobre isso e que espera que ele esclareça antes da sua revisão. No Google, contratamos grandes engenheiros de software, e você é um deles. Se você não consegue entender o código, é muito provável que outros desenvolvedores também não. Então você também está ajudando futuros desenvolvedores a entender esse código, quando pede ao desenvolvedor para esclarecê-lo.
 
-If you understand the code but you don't feel qualified to do some part of the
-review, [make sure there is a reviewer](#every-line-exceptions) on the CL who is
-qualified, particularly for complex issues such as privacy, security,
-concurrency, accessibility, internationalization, etc.
+Se você entende o código, mas não se sente qualificado para fazer alguma parte da revisão, [certifique-se de que há um revisor](#every-line-exceptions) na CL que é qualificado, especialmente para questões complexas como privacidade, segurança, simultaneidade, acessibilidade, internacionalização, etc.
 
-### Exceptions {#every-line-exceptions}
+### Exceções {#every-line-exceptions}
 
-What if it doesn't make sense for you to review every line? For example, you are
-one of multiple reviewers on a CL and may be asked:
+E se não fizer sentido para você revisar todas as linhas? Por exemplo, você pode ser um dos vários revisores em uma CL e pode ser pedido:
 
-*   To review only certain files that are part of a larger change.
-*   To review only certain aspects of the CL, such as the high-level design,
-    privacy or security implications, etc.
+- Para revisar apenas determinados arquivos que fazem parte de uma alteração maior.
+- Rever apenas alguns aspectos da CL, como o design de alto nível, implicações de privacidade ou segurança, etc.
 
-In these cases, note in a comment which parts you reviewed. Prefer giving
-[LGTM with comments](speed.md#lgtm-with-comments)
-.
+Nesses casos, anote em um comentário quais partes você revisou. Prefira dar [LGTM com comentários](speed.md#lgtm-with-comments)
 
-If you instead wish to grant LGTM after confirming that other reviewers have
-reviewed other parts of the CL, note this explicitly in a comment to set
-expectations. Aim to [respond quickly](speed.md#responses) once the CL has
-reached the desired state.
+Se, em vez disso, você deseja conceder LGTM após confirmar que outros revisores revisaram as outras partes da CL, cite isso explicitamente em um comentário para alinhar as expectativas. Procure [responder rapidamente](speed.md#responses) assim que a CL tiver atigindo o estado desejado.
 
-## Context
+## Contexto
 
-It is often helpful to look at the CL in a broad context. Usually the code
-review tool will only show you a few lines of code around the parts that are
-being changed. Sometimes you have to look at the whole file to be sure that the
-change actually makes sense. For example, you might see only four new lines
-being added, but when you look at the whole file, you see those four lines are
-in a 50-line method that now really needs to be broken up into smaller methods.
+Muitas vezes é útil olhar para a CL em um contexto amplo. Normalmente a ferramenta de revisão de código mostrará apenas algumas linhas de código em torno das partes que estão sendo alteradas. Às vezes você tem que olhar o arquivo inteiro para ter certeza de que as mudanças realmente fazem sentido. Por exemplo, você pode ver apenas quatro novas linhas sendo adicionadas, mas quando você olha para o arquivo inteiro, você vê que essas quatro linhas são em um método de 50 linhas que agora realmente precisa ser dividido em métodos menores.
 
-It's also useful to think about the CL in the context of the system as a whole.
-Is this CL improving the code health of the system or is it making the whole
-system more complex, less tested, etc.? **Don't accept CLs that degrade the code
-health of the system.** Most systems become complex through many small changes
-that add up, so it's important to prevent even small complexities in new
-changes.
+Também é útil pensar na CL no contexto do sistema como um todo.
+Esta CL está melhorando a integridade do código do sistema ou está tornando todo o sistema mais complexo, menos testado, etc? **Não aceite CLs que degradem o código e a saúde do sistema.** A maioria dos sistemas se tornam complexos por meio de muitas pequenas mudanças que se somam, por isso é importante evitar até mesmo pequenas complexidades em novas mudanças.
 
-## Good Things {#good-things}
+## Coisas boas {#good-things}
 
-If you see something nice in the CL, tell the developer, especially when they
-addressed one of your comments in a great way. Code reviews often just focus on
-mistakes, but they should offer encouragement and appreciation for good
-practices, as well. It’s sometimes even more valuable, in terms of mentoring, to
-tell a developer what they did right than to tell them what they did wrong.
+Se você vir algo legal na CL, diga ao desenvolvedor, especialmente quando ele abordou um de seus comentários de uma maneira excelente. As revisões de código geralmente se concentram apenas em erros, mas eles devem oferecer encorajamento e apreço por boas práticas também. Às vezes é ainda mais valioso em termos de orientação, dizer a um desenvolvedor o que eles fizeram de certo do que dizer a eles o que eles fizeram de errado.
 
-## Summary
+## Resumo
 
-In doing a code review, you should make sure that:
+Ao fazer uma revisão de código, você deve certificar-se de que:
 
--   The code is well-designed.
--   The functionality is good for the users of the code.
--   Any UI changes are sensible and look good.
--   Any parallel programming is done safely.
--   The code isn't more complex than it needs to be.
--   The developer isn't implementing things they *might* need in the future but
-    don't know they need now.
--   Code has appropriate unit tests.
--   Tests are well-designed.
--   The developer used clear names for everything.
--   Comments are clear and useful, and mostly explain *why* instead of *what*.
--   Code is appropriately documented (generally in g3doc).
--   The code conforms to our style guides.
+- O código é bem projetado.
+- A funcionalidade é boa para os usuários do código.
+- Quaisquer alterações na interface do usuário são sensatas e com boa aparência.
+- Qualquer programação paralela é feita com segurança.
+- O código não é mais complexo do que precisa ser.
+- O desenvolvedor não está implementando coisas que eles _podem_ precisar no futuro, mas que eles não precisam agora.
+- O código tem testes de unidade apropriados.
+- Os testes são bem projetados.
+- O desenvolvedor usou nomes claros para tudo.
+- Os comentários são claros e úteis, e principalmente explicam _por que_ em vez de _o que_.
+- O código está devidamente documentado (geralmente em g3doc).
+- O código está em conformidade com nossos guias de estilo.
 
-Make sure to review **every line** of code you've been asked to review, look at
-the **context**, make sure you're **improving code health**, and compliment
-developers on **good things** that they do.
+Certifique-se de revisar **cada linha** de código que você foi solicitado a revisar, olhar o **contexto**, verificar se você está **melhorando a integridade do código** e elogie desenvolvedores em **coisas boas** que eles fazem.
 
-Next: [Navigating a CL in Review](navigate.md)
+Próximo: [Navegar em uma CL em Revisão](navigate.md)

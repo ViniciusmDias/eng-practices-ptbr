@@ -1,63 +1,30 @@
-# The Standard of Code Review
+# O Padrão de Revisão de Código
 
+O objetivo principal da revisão de código é certificar-se de que a saúde da base de código do Google continue melhorando ao longo do tempo. Todas as ferramentas e processos de revisão de código são projetados para este fim.
 
+Para conseguir isso, uma série de trocas são feitas para manter o equilíbrio.
 
-The primary purpose of code review is to make sure that the overall
-code health of Google's code
-base is improving over time. All of the tools and processes of code review are
-designed to this end.
+Primeiro, os desenvolvedores devem ser capazes de _progredir_ em suas tarefas. Se você nunca enviar uma melhoria para a base de código, então a base de código nunca melhora. Também, se um revisor dificulta muito a entrada de _qualquer_ alteração, os desenvolvedores são desincentivados a fazer melhorias no futuro.
 
-In order to accomplish this, a series of trade-offs have to be balanced.
+Por outro lado, é dever do revisor certificar-se de que cada CL, é de tal qualidade, que a saúde geral do código de sua base de código não diminua com o passar do tempo. Isso pode ser complicado, porque muitas vezes as bases de código se degradam através de pequenas diminuições na saúde do código ao longo do tempo, especialmente quando uma equipe está sob restrições de tempo significativas e eles sentem que têm que tomar atalhos para atingir seus objetivos.
 
-First, developers must be able to _make progress_ on their tasks. If you never
-submit an improvement to the codebase, then the codebase never improves. Also,
-if a reviewer makes it very difficult for _any_ change to go in, then developers
-are disincentivized to make improvements in the future.
+Além disso, um revisor tem propriedade e responsabilidade sobre o código que está revendo. Eles querem garantir que a base de código permaneça consistente, sustentável e todas as outras coisas mencionadas em ["O Que Procurar em uma Revisão de Código."](looking-for.md)
 
-On the other hand, it is the duty of the reviewer to make sure that each CL is
-of such a quality that the overall code health of their codebase is not
-decreasing as time goes on. This can be tricky, because often, codebases degrade
-through small decreases in code health over time, especially when a team is
-under significant time constraints and they feel that they have to take
-shortcuts in order to accomplish their goals.
+Assim, assumimos a seguinte regra como padrão nas revisões de código:
 
-Also, a reviewer has ownership and responsibility over the code they are
-reviewing. They want to ensure that the codebase stays consistent, maintainable,
-and all of the other things mentioned in
-["What to look for in a code review."](looking-for.md)
+**Em geral, os revisores devem favorecer a aprovação de uma CL quando estiver em um estado em que definitivamente melhora a saúde geral do código do sistema sendo trabalhado, mesmo que a CL não seja perfeita.**
 
-Thus, we get the following rule as the standard we expect in code reviews:
+Esse é o princípio sênior entre todas as diretrizes de revisão de código.
 
-**In general, reviewers should favor approving a CL once it is in a state where
-it definitely improves the overall
-code health of the system
-being worked on, even if the CL isn't perfect.**
+Há limitações para isso, é claro. Por exemplo, se uma CL adiciona um recurso que o revisor não quer em seu sistema, então o revisor deve certamente rejeitar a aprovação, mesmo que o código seja bem projetado.
 
-That is _the_ senior principle among all of the code review guidelines.
+Um ponto-chave aqui é que não existe código "perfeito" code&mdash; Existe apenas um _melhor_ código. Os revisores não devem exigir que o autor aperfeiçoe cada pequena parte de uma CL antes de conceder a aprovação. Em vez disso, o revisor deve equilibrar a necessidade de avançar em relação à importância das mudanças que eles estão sugerindo. Em vez de buscar a perfeição, o que um revisor deve buscar é a _melhoria continua_. Uma CL que, como um todo, melhora a manutenibilidade, legibilidade e compreensão do sistema, não deve ser atrasada por dias ou semanas porque não é "perfeito".
 
-There are limitations to this, of course. For example, if a CL adds a feature
-that the reviewer doesn't want in their system, then the reviewer can certainly
-deny approval even if the code is well-designed.
+Os revisores devem _sempre_ sentir-se à vontade para deixar comentários expressando que algo poderia ser melhor, mas se não for muito importante, prefixe-o com algo como "Nit: " (algo que não está perfeito, porém aceitável) para deixar o autor saber que é apenas um ponto de polimento que ele poderiam ignorar.
 
-A key point here is that there is no such thing as "perfect" code&mdash;there is
-only _better_ code. Reviewers should not require the author to polish every tiny
-piece of a CL before granting approval. Rather, the reviewer should balance out
-the need to make forward progress compared to the importance of the changes they
-are suggesting. Instead of seeking perfection, what a reviewer should seek is
-_continuous improvement_. A CL that, as a whole, improves the maintainability,
-readability, and understandability of the system shouldn't be delayed for days
-or weeks because it isn't "perfect."
+Nota: Nada neste documento justifica a aprovação de CLs que definitivamente _pioram_ a saúde geral do código do sistema. A única vez que você faria isso estaria em uma [emergência](../emergencies.md).
 
-Reviewers should _always_ feel free to leave comments expressing that something
-could be better, but if it's not very important, prefix it with something like
-"Nit: " to let the author know that it's just a point of polish that they could
-choose to ignore.
-
-Note: Nothing in this document justifies checking in CLs that definitely
-_worsen_ the overall code health of the system. The only time you would do that
-would be in an [emergency](../emergencies.md).
-
-## Mentoring
+## Mentoria
 
 Code review can have an important function of teaching developers something new
 about a language, a framework, or general software design principles. It's
@@ -67,47 +34,24 @@ in mind that if your comment is purely educational, but not critical to meeting
 the standards described in this document, prefix it with "Nit: " or otherwise
 indicate that it's not mandatory for the author to resolve it in this CL.
 
-## Principles {#principles}
+A revisão de código pode ter uma função importante de ensinar aos desenvolvedores algo novo sobre uma linguagem, uma estrutura ou princípios gerais de design de software. É sempre bom deixar comentários que ajudem um desenvolvedor a aprender algo novo. Compartilhar conhecimento faz parte da melhoria da saúde do código de um sistema ao longo do tempo. Apenas guarde em mente que, se seu comentário for puramente educacional, mas não crítico para atender os padrões descritos neste documento, prefixe-o com "Nit: " ou de outra forma indicando que não é obrigatório para o autor resolvê-lo nesta CL.
 
-*   Technical facts and data overrule opinions and personal preferences.
+## Princípios {#principles}
 
-*   On matters of style, the [style guide](http://google.github.io/styleguide/)
-    is the absolute authority. Any purely style point (whitespace, etc.) that is
-    not in the style guide is a matter of personal preference. The style should
-    be consistent with what is there. If there is no previous style, accept the
-    author's.
+- Fatos e dados técnicos anulam opiniões e preferências pessoais.
 
-*   **Aspects of software design are almost never a pure style issue or just a
-    personal preference.** They are based on underlying principles and should be
-    weighed on those principles, not simply by personal opinion. Sometimes there
-    are a few valid options. If the author can demonstrate (either through data
-    or based on solid engineering principles) that several approaches are
-    equally valid, then the reviewer should accept the preference of the author.
-    Otherwise the choice is dictated by standard principles of software design.
+- Em questões de estilo, o [guia de estilo](http://google.github.io/styleguide/) é a autoridade absoluta. Qualquer ponto puramente de estilo (espaço em branco, etc.) que não está no guia de estilo, é uma preferência pessoal. O estilo deve ser consistente com o que está lá. Se não houver estilo anterior, aceite o que o autor propõe.
 
-*   If no other rule applies, then the reviewer may ask the author to be
-    consistent with what is in the current codebase, as long as that doesn't
-    worsen the overall code health of the system.
+- **Ascpectos de design de software quase nunca são uma questão puramente de estilo ou apenas uma preferência pessoal.** Eles são baseados em princípios básicos e devem ser mantidos por esses príncipios e não, simplesmente, por opinião pessoal. Às vezes existem lá algumas outras opiniões válidas. Se o autor puder demonstrar (seja por meio de dados ou baseado em sólidos princípios de engenharia) que várias abordagens são igualmente válidas, então o revisor deve aceitar a preferência do autor. Caso contrário, a escolha é ditada pelos princípios dos padrões de design de software.
 
-## Resolving Conflicts {#conflicts}
+- Se nenhuma outra regra se aplicar, o revisor pode solicitar ao autor que seja consistente com o que está na base de código atual, desde que isso não piore a saúde geral do código do sistema.
 
-In any conflict on a code review, the first step should always be for the
-developer and reviewer to try to come to consensus, based on the contents of
-this document and the other documents in
-[The CL Author's Guide](../developer/index.md) and this
-[Reviewer Guide](index.md).
+## Resolvendo Conflitos {#conflicts}
 
-When coming to consensus becomes especially difficult, it can help to have a
-face-to-face meeting or a video conference between the reviewer and the author, instead of
-just trying to resolve the conflict through code review comments. (If you do
-this, though, make sure to record the results of the discussion as a comment on
-the CL, for future readers.)
+Durante qualquer conflito em uma revisão de código, o primeiro passo deve ser sempre para o desenvolvedor e o revisor tentarem chegarem a um consenso, com base no conteúdo deste documento e dos demais documentos [O Guia do Autor da CL](../developer/index.md) e este [Guia do revisor](index.md).
 
-If that doesn't resolve the situation, the most common way to resolve it would
-be to escalate. Often the
-escalation path is to a broader team discussion, having a Technical Lead weigh in, asking
-for a decision from a maintainer of the code, or asking an Eng Manager to help
-out. **Don't let a CL sit around because the author and the reviewer can't come
-to an agreement.**
+Quando chegar a um consenso é muito complicado, isto pode ser resolvido em um encontro presencial ou uma videoconferência entre o revisor e o autor, em vez de ficar tentando resolver o conflito por meio de comentários de revisão de código. (Se vocẽ fizer isso, porém, certifique-se de registrar os resultados da discussão como um comentário sobre o CL, para futuros leitores.)
 
-Next: [What to look for in a code review](looking-for.md)
+Se isso não resolver a situação, a maneira mais comum de resolvê-la seria escalar ela. Muitas vezes o caminho de escalonamento é para uma discussão mais ampla da equipe, tendo um líder técnico pesando, perguntando a opinião de um mantenedor do código, ou pedindo ajuda a um Engenheiro Técnico de fora. **Não deixe um CL parado porque o autor e o revisor não podem vir a um acordo.**
+
+Próximo: [O que procurar em uma revisão de código](looking-for.md)
