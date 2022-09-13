@@ -1,83 +1,33 @@
-# Handling pushback in code reviews
+# Como Lidar com Negativas nas Revisões de Código
 
+Às vezes, um desenvolvedor não aceitará uma revisão de código. Ou eles vão discordar com a sua sugestão ou eles vão reclamar que você está sendo muito rigoroso no geral.
 
+## Quem está certo? {#who_is_right}
 
-Sometimes a developer will push back on a code review. Either they will disagree
-with your suggestion or they will complain that you are being too strict in
-general.
+Quando desenvolvedores discordarem de sua sugestão, primeiro reserve um momento para considerar se ele estão corretos. Na maioria das vezes, eles estão mais próximos do código do que você e assim eles podem realmente ter uma visão melhor sobre certos aspectos dele. Será que os argumentos deles fazem sentido? Fazem sentido do ponto de vista de saúde do código? Se for assim, deixe-os saber que eles estão certos e deixe a questão de lado.
 
-## Who is right? {#who_is_right}
+No entanto, os desenvolvedores nem sempre estão certos. Neste caso, o revisor deve explicar melhor por que eles acreditam que sua sugestão está correta. Uma boa explicação demonstra tanto uma compreensão da resposta do desenvolvedor e informações adicionais sobre por que a mudança está sendo solicitada.
 
-When a developer disagrees with your suggestion, first take a moment to consider
-if they are correct. Often, they are closer to the code than you are, and so
-they might really have a better insight about certain aspects of it. Does their
-argument make sense? Does it make sense from a code health perspective? If so,
-let them know that they are right and let the issue drop.
+Em particular, quando o revisor acredita que sua sugestão melhorará a saúde do código, eles devem continuar a defender a mudança, se acreditarem que o a melhoria de qualidade de código resultante justifica o trabalho adicional solicitado. **Melhorar a saúde do código tende a acontecer em pequenas etapas.**
 
-However, developers are not always right. In this case the reviewer should
-further explain why they believe that their suggestion is correct. A good
-explanation demonstrates both an understanding of the developer's reply, and
-additional information about why the change is being requested.
+Às vezes, são necessárias algumas rodadas para explicar uma sugestão antes que ela realmente seja entendida. Apenas certifique-se de ser sempre [educado](comments.md#courtesy) e deixe o desenvolvedor saber que você _ouve_ o que ele está dizendo, você só não _concorda_.
 
-In particular, when the reviewer believes their suggestion will improve code
-health, they should continue to advocate for the change, if they believe the
-resulting code quality improvement justifies the additional work requested.
-**Improving code health tends to happen in small steps.**
+## Desagradando os Desenvolvedores {#upsetting_developers}
 
-Sometimes it takes a few rounds of explaining a suggestion before it really
-sinks in. Just make sure to always stay [polite](comments.md#courtesy) and let
-the developer know that you *hear* what they're saying, you just don't *agree*.
+Às vezes, os revisores acreditam que o desenvolvedor ficará chateado se o revisor insiste em uma melhoria. Às vezes os desenvolvedores ficam chateados, mas é rapidamente e eles ficam muito agradecidos depois que você os ajudou a melhorar a qualidade do seu código. Normalmente, se você for [educado](comments.md#courtesy) em seus comentários, os desenvolvedores não ficam nem um pouco chateados e a preocupação é apenas na mente do revisor. As pertubações são geralmente mais sobre [a forma como os comentários são escritos](comments.md#courtesy) do que os insistentes comentários do revisor sobre a qualidade do código.
 
-## Upsetting Developers {#upsetting_developers}
+## Limpando Mais Tarde {#later}
 
-Reviewers sometimes believe that the developer will be upset if the reviewer
-insists on an improvement. Sometimes developers do become upset, but it is
-usually brief and they become very thankful later that you helped them improve
-the quality of their code. Usually, if you are [polite](comments.md#courtesy) in
-your comments, developers actually don't become upset at all, and the worry is
-just in the reviewer's mind. Upsets are usually more about
-[the way comments are written](comments.md#courtesy) than about the reviewer's
-insistence on code quality.
+Um motivo comum para não aceitar os feedbacks, é que os desenvolvedores (compreensivelmente) querem ter coisas feitas. Eles não querem passar por outra rodada de revisão apenas para a CL ser aceita. Então eles dizem que vão limpar algo em uma CL posterior e pedem para você dar LGTM _neste_ CL agora. Alguns desenvolvedores são muito bons nisso e vão imediatamente escrever uma CL de auxiliar para corrijir esse problema. No entanto, a experiência mostra que quanto mais tempo passa depois que um desenvolvedor escreveu a CL original, é menos provável que essa limpeza aconteça. Na verdade, geralmente, a menos que o desenvolvedor faça a limpeza _imediatamente_ após a CL atual entrar, isso nunca vai acontecer. Isso não é porque os desenvolvedores são irresponsáveis, mas porque eles têm muito trabalho a fazer e a limpeza se perde ou é esquecida na pressa de outros trabalhos. Assim, geralmente é melhor insistir que o desenvolvedor limpe sua CL _agora_, antes que o código entre na base de código e esteja "pronto." Deixar as pessoas "limparem as coisas mais tarde" é uma maneira comum de degenerar as bases de código.
 
-## Cleaning It Up Later {#later}
+Se uma CL introduzir uma nova complexidade, ela deve ser limpa antes do envio, a menos que seja uma [emergência](../emergencies.md). Se o CL expõe problemas no ambiente e eles não podem ser resolvidos agora, o desenvolvedor deve registrar um bug para a limpeza e atribuir para si mesmo para que não se perca. Eles, opcionalmente, podem escrever um comentário TODO no código que faz referência ao bug encontrado.
 
-A common source of push back is that developers (understandably) want to get
-things done. They don't want to go through another round of review just to get
-this CL in. So they say they will clean something up in a later CL, and thus you
-should LGTM *this* CL now. Some developers are very good about this, and will
-immediately write a follow-up CL that fixes the issue. However, experience shows
-that as more time passes after a developer writes the original CL, the less
-likely this clean up is to happen. In fact, usually unless the developer does
-the clean up *immediately* after the present CL, it never happens. This isn't
-because developers are irresponsible, but because they have a lot of work to do
-and the cleanup gets lost or forgotten in the press of other work. Thus, it is
-usually best to insist that the developer clean up their CL *now*, before the
-code is in the codebase and "done." Letting people "clean things up later" is a
-common way for codebases to degenerate.
+## Reclamações Gerais Sobre Rigorosidade {#strictness}
 
-If a CL introduces new complexity, it must be cleaned up before submission
-unless it is an [emergency](../emergencies.md). If the CL exposes surrounding
-problems and they can't be addressed right now, the developer should file a bug
-for the cleanup and assign it to themselves so that it doesn't get lost. They
-can optionally also write a TODO comment in the code that references the filed
-bug.
+Se você anteriormente tinha revisões de código bastante negligentes e passa a ser rigoroso em suas reviews, alguns desenvolvedores vão reclamar bastante. Melhorando a [velocidade](speed.md) de suas revisões de código faz com que geralmente essas reclamações desapareçam.
 
-## General Complaints About Strictness {#strictness}
+Às vezes pode levar meses para que essas queixas desapareçam, mas eventualmente os desenvolvedores tendem a ver o valor de revisões de código estritas à medida que veem o grande código que eles ajudaram a gerar. Às vezes, os manifestantes mais barulhentos até se tornam seus adeptos mais fortes quando acontece algo que os faz realmente ver o valor da rigorosidade que você está adicionando.
 
-If you previously had fairly lax code reviews and you switch to having strict
-reviews, some developers will complain very loudly. Improving the
-[speed](speed.md) of your code reviews usually causes these complaints to fade
-away.
+## Resolvendo Conflitos {#conflicts}
 
-Sometimes it can take months for these complaints to fade away, but eventually
-developers tend to see the value of strict code reviews as they see what great
-code they help generate. Sometimes the loudest protesters even become your
-strongest supporters once something happens that causes them to really see the
-value you're adding by being strict.
-
-## Resolving Conflicts {#conflicts}
-
-If you are following all of the above but you still encounter a conflict between
-yourself and a developer that can't be resolved, see
-[The Standard of Code Review](standard.md) for guidelines and principles that
-can help resolve the conflict.
+Se você está seguindo todos os itens acima, mas ainda encontra um conflito entre você e um desenvolvedor que não pode ser resolvido, consulte [O Padrão de Revisão de Código](standard.md) para diretrizes e princípios que podem ajudar a resolver o conflito.
